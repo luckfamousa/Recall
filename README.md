@@ -19,18 +19,37 @@ A macOS menu bar app for saving and restoring window layouts.
 
 ## Installation
 
+### Homebrew (recommended)
+
+```bash
+brew tap luckfamousa/tap
+brew install --cask recall
+```
+
+### Manual download
+
+Download the latest release from [GitHub Releases](https://github.com/luckfamousa/Recall/releases) and move `Recall.app` to `/Applications`.
+
 ### Build from source
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/recall.git
-cd recall
-
-# Build and create app bundle
+git clone https://github.com/luckfamousa/Recall.git
+cd Recall
 ./Scripts/build-app.sh
+cp -r .build/Recall.app /Applications/
+```
 
-# Install to Applications (recommended)
-cp -r Recall.app /Applications/
+### First launch (Gatekeeper warning)
+
+Since Recall is not notarized, macOS will show a warning on first launch. To open anyway:
+
+1. Right-click `Recall.app` in Finder
+2. Select **Open** from the context menu
+3. Click **Open** in the dialog
+
+Or via Terminal:
+```bash
+xattr -cr /Applications/Recall.app
 ```
 
 ### Grant permissions
