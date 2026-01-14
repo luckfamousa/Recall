@@ -1,0 +1,17 @@
+# Build artifacts
+.build/
+Recall.app/
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+
+# macOS
+.DS_Store
+*.swp
+
+# Debug logs
+*.log
+.claude/
