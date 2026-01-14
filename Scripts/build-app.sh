@@ -24,6 +24,9 @@ cp "$BUILD_DIR/release/Recall" "$APP_BUNDLE/Contents/MacOS/"
 # Copy Info.plist
 cp "$PROJECT_DIR/Resources/Info.plist" "$APP_BUNDLE/Contents/"
 
+# Copy app icon
+cp "$PROJECT_DIR/Resources/AppIcon.icns" "$APP_BUNDLE/Contents/Resources/"
+
 # Create PkgInfo
 echo -n "APPL????" > "$APP_BUNDLE/Contents/PkgInfo"
 
