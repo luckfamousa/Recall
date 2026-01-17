@@ -164,15 +164,8 @@ class MenuBarController: NSObject {
     // MARK: - Actions
 
     @objc private func saveLayoutClicked() {
-        // Check accessibility permission first
-        if !windowManager.hasAccessibilityPermission {
-            windowManager.requestAccessibilityPermission()
-            showAlert(
-                title: "Accessibility Permission Required",
-                message: "Recall needs accessibility permission to capture window positions. Please grant access in System Settings > Privacy & Security > Accessibility, then try again."
-            )
-            return
-        }
+        // Don't pre-check AXIsProcessTrusted - it's unreliable with ad-hoc signing
+        // Instead, try to capture and handle failure gracefully
 
         // Prompt for layout name
         let alert = NSAlert()
@@ -214,7 +207,12 @@ class MenuBarController: NSObject {
 
         // Capture and save
         guard let layout = windowManager.captureLayout(name: name) else {
-            showAlert(title: "Capture Failed", message: "Failed to capture the current window layout.")
+            // Request permission prompt if capture failed (likely permission issue)
+            windowManager.requestAccessibilityPermission()
+            showAlert(
+                title: "Capture Failed",
+                message: "Failed to capture window layout. Please ensure Recall has Accessibility permission in System Settings > Privacy & Security > Accessibility."
+            )
             return
         }
 

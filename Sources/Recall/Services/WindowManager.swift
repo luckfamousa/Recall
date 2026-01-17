@@ -78,16 +78,17 @@ class WindowManager {
     // MARK: - Capture Layout
 
     func captureLayout(name: String) -> Layout? {
-        guard hasAccessibilityPermission else {
-            requestAccessibilityPermission()
-            return nil
-        }
+        // Don't pre-check AXIsProcessTrusted - it's unreliable with ad-hoc signing
+        // Just try to capture and handle failures gracefully
 
         var displaySnapshots: [String: [WindowSnapshot]] = [:]
 
         let apps = NSWorkspace.shared.runningApplications.filter { app in
             app.activationPolicy == .regular && !app.isHidden
         }
+
+        // If there are running apps but we capture zero windows, it's likely a permission issue
+        let hasRunningApps = !apps.isEmpty
 
         // Track window indices per app
         var appWindowIndices: [String: Int] = [:]
@@ -125,6 +126,14 @@ class WindowManager {
 
         let displays = displaySnapshots.map { uuid, windows in
             DisplaySnapshot(displayUUID: uuid, windows: windows)
+        }
+
+        let totalWindows = displays.reduce(0) { $0 + $1.windows.count }
+
+        // If we have running apps but captured zero windows, it's likely a permission issue
+        if hasRunningApps && totalWindows == 0 {
+            debugLog("captureLayout: No windows captured despite \(apps.count) running apps - likely permission issue")
+            return nil
         }
 
         return Layout(name: name, displays: displays)
